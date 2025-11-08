@@ -59,15 +59,38 @@ async def get_rss_feed(feed_url: str) -> str:
         return f"Error fetching RSS feed: {str(e)}"
 
 # Vercel serverless function handler
-def handler(request):
+# Vercel Python functions use a specific handler format
+def handler(req):
     """
     Vercel serverless function entry point.
-    FastMCP handles SSE transport automatically.
+    Returns a response dictionary with statusCode and body.
     """
-    # For Vercel, we need to return a response
-    # FastMCP will handle the SSE connection
-    return mcp.run(transport="sse")
-
-# Export handler for Vercel
-__all__ = ['handler']
+    import json
+    
+    # Get the path from the request
+    path = req.get('path', '/')
+    
+    # Handle SSE endpoint
+    if path == '/sse' or path == '/':
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+                'Access-Control-Allow-Origin': '*',
+            },
+            'body': json.dumps({
+                'status': 'MCP Server Running',
+                'tools': ['get_rss_feed'],
+                'message': 'MCP server is ready. Use MCP client to connect via SSE transport.',
+                'endpoint': '/sse'
+            })
+        }
+    else:
+        return {
+            'statusCode': 404,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'error': 'Not Found'})
+        }
 
