@@ -1,29 +1,40 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Simple RSS parser using native fetch and DOMParser
+// Simple RSS parser using native fetch and regex-based XML parsing
 async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
   const response = await fetch(url);
   const xmlText = await response.text();
   
-  // Simple XML parsing (works in Node.js 18+)
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+  // Extract feed title
+  const titleMatch = xmlText.match(/<title[^>]*>([^<]+)<\/title>/i);
+  const title = titleMatch ? titleMatch[1].trim() : 'Unknown';
   
-  const title = xmlDoc.querySelector('title')?.textContent || 'Unknown';
+  // Extract items using regex
   const items: any[] = [];
+  const itemMatches = xmlText.matchAll(/<item[^>]*>([\s\S]*?)<\/item>/gi);
   
-  const entries = xmlDoc.querySelectorAll('item');
-  entries.forEach((item, index) => {
-    if (index >= 10) return; // Limit to 10 items
+  let index = 0;
+  for (const match of itemMatches) {
+    if (index >= 10) break; // Limit to 10 items
+    
+    const itemXml = match[1];
+    const itemTitle = itemXml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || 'No title';
+    const itemLink = itemXml.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1]?.trim() || '#';
+    const itemPubDate = itemXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i)?.[1]?.trim() || 
+                       itemXml.match(/<date[^>]*>([\s\S]*?)<\/date>/i)?.[1]?.trim() || 'Unknown date';
+    const itemDescription = itemXml.match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1]?.trim() || '';
+    const itemContent = itemXml.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i)?.[1]?.trim() || itemDescription;
     
     items.push({
-      title: item.querySelector('title')?.textContent || 'No title',
-      link: item.querySelector('link')?.textContent || '#',
-      pubDate: item.querySelector('pubDate')?.textContent || item.querySelector('date')?.textContent || 'Unknown date',
-      description: item.querySelector('description')?.textContent || '',
-      content: item.querySelector('content\\:encoded')?.textContent || item.querySelector('description')?.textContent || '',
+      title: itemTitle,
+      link: itemLink,
+      pubDate: itemPubDate,
+      description: itemDescription,
+      content: itemContent,
     });
-  });
+    
+    index++;
+  }
   
   return { title, items };
 }
@@ -126,7 +137,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         try {
-          // Parse RSS feed using native fetch
+          // Parse RSS feed using native fetch and regex
           const feed = await parseRSSFeed(feedUrl);
           
           // Import html-to-text dynamically
