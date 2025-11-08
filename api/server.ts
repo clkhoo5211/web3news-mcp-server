@@ -2,29 +2,29 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Vercel serverless function handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  if (req.method === 'GET') {
-    res.status(200).json({
-      status: 'MCP Server Running',
-      tools: ['get_rss_feed'],
-      message: 'Use MCP client to connect via SSE transport',
-      protocolVersion: '2024-11-05',
-    });
-    return;
-  }
-
-  // Handle POST requests for MCP protocol
   try {
-    const body = req.body || {};
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+
+    if (req.method === 'GET') {
+      res.status(200).json({
+        status: 'MCP Server Running',
+        tools: ['get_rss_feed'],
+        message: 'Use MCP client to connect via SSE transport',
+        protocolVersion: '2024-11-05',
+      });
+      return;
+    }
+
+    // Handle POST requests for MCP protocol
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     
     // Handle MCP protocol initialization
     if (body.method === 'initialize') {
@@ -168,9 +168,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
     });
   } catch (error: any) {
+    // Better error handling with details
+    console.error('Handler error:', error);
     res.status(500).json({
       error: error.message || 'Internal server error',
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      type: error.constructor?.name || 'Unknown',
     });
   }
 }
