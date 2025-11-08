@@ -74,7 +74,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       
       // Convert HTML to text
       const htmlToTextOptions = {
-        wordwrap: false,
+        wordwrap: false as const,
         ignoreLinks: true,
         ignoreImages: true,
       };
