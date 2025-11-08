@@ -4,10 +4,11 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import Parser from 'feedparser';
-import https from 'https';
-import http from 'http';
+import Parser from 'rss-parser';
 import { convert } from 'html-to-text';
+
+// Initialize RSS parser
+const rssParser = new Parser();
 
 // Initialize MCP server
 const server = new Server(
@@ -23,49 +24,16 @@ const server = new Server(
 );
 
 // Helper function to fetch RSS feed
-function fetchRSSFeed(url: string): Promise<{ meta: any; items: any[] }> {
-  return new Promise((resolve, reject) => {
-    const client = url.startsWith('https') ? https : http;
-    
-    client.get(url, (res) => {
-      if (res.statusCode !== 200) {
-        reject(new Error(`Failed to fetch RSS feed: ${res.statusCode}`));
-        return;
-      }
-
-      const parser = new Parser({});
-      const items: any[] = [];
-      let meta: any = null;
-
-      res.pipe(parser);
-
-      parser.on('error', (error: Error) => {
-        reject(error);
-      });
-
-      parser.on('meta', (m: any) => {
-        meta = m;
-      });
-
-      parser.on('readable', function () {
-        let stream = this;
-        let item: any;
-
-        while ((item = stream.read())) {
-          items.push(item);
-        }
-      });
-
-      parser.on('end', () => {
-        resolve({
-          meta,
-          items: items.slice(0, 10), // Limit to 10 entries
-        });
-      });
-    }).on('error', (error: Error) => {
-      reject(error);
-    });
-  });
+async function fetchRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
+  try {
+    const feed = await rssParser.parseURL(url);
+    return {
+      title: feed.title || 'Unknown',
+      items: feed.items.slice(0, 10), // Limit to 10 entries
+    };
+  } catch (error: any) {
+    throw new Error(`Failed to fetch RSS feed: ${error.message}`);
+  }
 }
 
 // List available tools
