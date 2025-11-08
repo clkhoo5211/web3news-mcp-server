@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { NEWS_SOURCES, getSourcesByCategory, getSourceByName, getAllCategories } from './newsSources';
 
 // Simple RSS parser using native fetch and regex-based XML parsing
 async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
@@ -113,6 +114,56 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 required: ['feed_url'],
               },
             },
+            {
+              name: 'list_news_sources',
+              description: 'List all available news sources, optionally filtered by category',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  category: {
+                    type: 'string',
+                    description: 'Optional: Filter sources by category (general, tech, business, crypto, science, health, sports, entertainment, politics, environment)',
+                  },
+                },
+                required: [],
+              },
+            },
+            {
+              name: 'get_news_by_category',
+              description: 'Fetch news from all sources in a specific category',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  category: {
+                    type: 'string',
+                    description: 'Category name (general, tech, business, crypto, science, health, sports, entertainment, politics, environment)',
+                  },
+                  max_items_per_source: {
+                    type: 'number',
+                    description: 'Maximum items to fetch per source (default: 5)',
+                  },
+                },
+                required: ['category'],
+              },
+            },
+            {
+              name: 'get_news_by_source',
+              description: 'Fetch news from a specific source by name',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  source_name: {
+                    type: 'string',
+                    description: 'Name of the news source (e.g., "Google News - Top Stories", "TechCrunch")',
+                  },
+                  max_items: {
+                    type: 'number',
+                    description: 'Maximum items to fetch (default: 10)',
+                  },
+                },
+                required: ['source_name'],
+              },
+            },
           ],
         },
       });
@@ -192,6 +243,227 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 {
                   type: 'text',
                   text: result,
+                },
+              ],
+            },
+          });
+          return;
+        } catch (error: any) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32603,
+              message: `Error: ${error.message || 'Unknown error'}`,
+            },
+          });
+          return;
+        }
+      }
+
+      // List news sources
+      if (name === 'list_news_sources') {
+        try {
+          const category = args?.category;
+          const sources = category ? getSourcesByCategory(category) : NEWS_SOURCES;
+          
+          const result = `# Available News Sources${category ? ` (Category: ${category})` : ''}\n\n` +
+            `Total: ${sources.length} sources\n\n` +
+            sources.map((source, i) => 
+              `${i + 1}. **${source.name}**\n` +
+              `   - Category: ${source.category}\n` +
+              `   - Language: ${source.language}\n` +
+              `   - URL: ${source.url}\n` +
+              `   - Verified: ${source.verified ? '✅' : '❌'}\n`
+            ).join('\n') +
+            `\n\nAvailable categories: ${getAllCategories().join(', ')}`;
+
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            result: {
+              content: [
+                {
+                  type: 'text',
+                  text: result,
+                },
+              ],
+            },
+          });
+          return;
+        } catch (error: any) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32603,
+              message: `Error: ${error.message || 'Unknown error'}`,
+            },
+          });
+          return;
+        }
+      }
+
+      // Get news by category
+      if (name === 'get_news_by_category') {
+        try {
+          const category = args?.category;
+          const maxItemsPerSource = args?.max_items_per_source || 5;
+
+          if (!category) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: 'category is required',
+              },
+            });
+            return;
+          }
+
+          const sources = getSourcesByCategory(category);
+          
+          if (sources.length === 0) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: `No sources found for category: ${category}. Available categories: ${getAllCategories().join(', ')}`,
+              },
+            });
+            return;
+          }
+
+          // Fetch from all sources in parallel (limit to first 5 sources for performance)
+          const sourcesToFetch = sources.slice(0, 5);
+          const fetchPromises = sourcesToFetch.map(async (source) => {
+            try {
+              const feed = await parseRSSFeed(source.url);
+              return {
+                source: source.name,
+                success: true,
+                items: feed.items.slice(0, maxItemsPerSource),
+              };
+            } catch (error: any) {
+              return {
+                source: source.name,
+                success: false,
+                error: error.message || 'Unknown error',
+              };
+            }
+          });
+
+          const results = await Promise.allSettled(fetchPromises);
+          
+          let resultText = `# News from Category: ${category}\n\n`;
+          resultText += `Sources checked: ${sourcesToFetch.length}\n\n`;
+
+          results.forEach((result, i) => {
+            if (result.status === 'fulfilled') {
+              const data = result.value;
+              if (data.success && data.items && data.items.length > 0) {
+                resultText += `## ${data.source}\n\n`;
+                data.items.forEach((item: any, j: number) => {
+                  resultText += `${j + 1}. **${item.title}**\n`;
+                  resultText += `   - Link: [${item.link}](${item.link})\n`;
+                  resultText += `   - Published: ${item.pubDate}\n`;
+                  if (item.description) {
+                    const desc = item.description.replace(/<[^>]*>/g, '').substring(0, 150);
+                    resultText += `   - Summary: ${desc}...\n`;
+                  }
+                  resultText += '\n';
+                });
+                resultText += '\n';
+              } else {
+                resultText += `## ${data.source}\n❌ Failed: ${data.error || 'Unknown error'}\n\n`;
+              }
+            }
+          });
+
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            result: {
+              content: [
+                {
+                  type: 'text',
+                  text: resultText,
+                },
+              ],
+            },
+          });
+          return;
+        } catch (error: any) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32603,
+              message: `Error: ${error.message || 'Unknown error'}`,
+            },
+          });
+          return;
+        }
+      }
+
+      // Get news by source name
+      if (name === 'get_news_by_source') {
+        try {
+          const sourceName = args?.source_name;
+          const maxItems = args?.max_items || 10;
+
+          if (!sourceName) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: 'source_name is required',
+              },
+            });
+            return;
+          }
+
+          const source = getSourceByName(sourceName);
+          
+          if (!source) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: `Source not found: ${sourceName}. Use list_news_sources to see available sources.`,
+              },
+            });
+            return;
+          }
+
+          const feed = await parseRSSFeed(source.url);
+          
+          let resultText = `# ${source.name}\n\n`;
+          resultText += `Category: ${source.category} | Language: ${source.language}\n\n`;
+          
+          feed.items.slice(0, maxItems).forEach((item: any, i: number) => {
+            resultText += `## ${i + 1}. ${item.title}\n\n`;
+            resultText += `- **Link**: [${item.link}](${item.link})\n`;
+            resultText += `- **Published**: ${item.pubDate}\n`;
+            if (item.description) {
+              const desc = item.description.replace(/<[^>]*>/g, '').trim();
+              resultText += `- **Summary**: ${desc}\n`;
+            }
+            resultText += '\n';
+          });
+
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            result: {
+              content: [
+                {
+                  type: 'text',
+                  text: resultText,
                 },
               ],
             },
