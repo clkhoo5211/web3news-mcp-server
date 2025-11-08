@@ -18,12 +18,14 @@ async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] 
     if (index >= 10) break; // Limit to 10 items
     
     const itemXml = match[1];
-    const itemTitle = itemXml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || 'No title';
-    const itemLink = itemXml.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1]?.trim() || '#';
-    const itemPubDate = itemXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i)?.[1]?.trim() || 
-                       itemXml.match(/<date[^>]*>([\s\S]*?)<\/date>/i)?.[1]?.trim() || 'Unknown date';
-    const itemDescription = itemXml.match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1]?.trim() || '';
-    const itemContent = itemXml.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i)?.[1]?.trim() || itemDescription;
+    // Remove CDATA wrappers
+    const cleanXml = itemXml.replace(/<!\[CDATA\[(.*?)\]\]>/gi, '$1');
+    const itemTitle = cleanXml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || 'No title';
+    const itemLink = cleanXml.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1]?.trim() || '#';
+    const itemPubDate = cleanXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i)?.[1]?.trim() || 
+                       cleanXml.match(/<date[^>]*>([\s\S]*?)<\/date>/i)?.[1]?.trim() || 'Unknown date';
+    const itemDescription = cleanXml.match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1]?.trim() || '';
+    const itemContent = cleanXml.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i)?.[1]?.trim() || itemDescription;
     
     items.push({
       title: itemTitle,
