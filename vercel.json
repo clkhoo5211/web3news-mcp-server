@@ -2,8 +2,7 @@
   "version": 2,
   "functions": {
     "api/server.ts": {
-      "maxDuration": 60,
-      "includeFiles": "node_modules/rss-parser/**"
+      "maxDuration": 60
     }
   }
 }

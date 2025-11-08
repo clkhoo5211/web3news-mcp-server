@@ -1,6 +1,34 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Minimal test handler to isolate the issue
+// Simple RSS parser using native fetch and DOMParser
+async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
+  const response = await fetch(url);
+  const xmlText = await response.text();
+  
+  // Simple XML parsing (works in Node.js 18+)
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+  
+  const title = xmlDoc.querySelector('title')?.textContent || 'Unknown';
+  const items: any[] = [];
+  
+  const entries = xmlDoc.querySelectorAll('item');
+  entries.forEach((item, index) => {
+    if (index >= 10) return; // Limit to 10 items
+    
+    items.push({
+      title: item.querySelector('title')?.textContent || 'No title',
+      link: item.querySelector('link')?.textContent || '#',
+      pubDate: item.querySelector('pubDate')?.textContent || item.querySelector('date')?.textContent || 'Unknown date',
+      description: item.querySelector('description')?.textContent || '',
+      content: item.querySelector('content\\:encoded')?.textContent || item.querySelector('description')?.textContent || '',
+    });
+  });
+  
+  return { title, items };
+}
+
+// Vercel serverless function handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -78,7 +106,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Handle tool calls - simplified for testing
+    // Handle tool calls
     if (body.method === 'tools/call') {
       const { name, arguments: args } = body.params || {};
       
@@ -98,16 +126,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         try {
-          // Try dynamic import
-          const rssParserModule = await import('rss-parser');
+          // Parse RSS feed using native fetch
+          const feed = await parseRSSFeed(feedUrl);
+          
+          // Import html-to-text dynamically
           const htmlToTextModule = await import('html-to-text');
-          
-          // Handle default export
-          const Parser = (rssParserModule.default || rssParserModule) as any;
           const { convert } = htmlToTextModule;
-          
-          const rssParser = new Parser();
-          const feed = await rssParser.parseURL(feedUrl);
           
           const htmlToTextOptions = {
             wordwrap: false as const,
@@ -115,16 +139,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ignoreImages: true,
           };
 
-          let result = `# Feed: ${feed.title || 'Unknown'}\n\n`;
+          let result = `# Feed: ${feed.title}\n\n`;
           
-          (feed.items || []).slice(0, 10).forEach((entry: any, i: number) => {
-            const summary = entry.contentSnippet || entry.content || entry.description || '';
+          feed.items.forEach((entry: any, i: number) => {
+            const summary = entry.description || entry.content || '';
             const summaryText = convert(summary, htmlToTextOptions).trim();
             
             result += `## Entry ${i + 1}\n`;
             result += `- **Title**: ${entry.title || 'No title'}\n`;
             result += `- **Link**: [${entry.link || '#'}](${entry.link || '#'})\n`;
-            result += `- **Published**: ${entry.pubDate || entry.isoDate || 'Unknown date'}\n`;
+            result += `- **Published**: ${entry.pubDate || 'Unknown date'}\n`;
             if (summaryText) {
               result += `- **Summary**: ${summaryText}\n`;
             }
