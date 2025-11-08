@@ -1,33 +1,25 @@
 import json
 
 # Vercel Python serverless function handler
-# According to Vercel docs, handler receives (req, res) or just req
-def handler(req, res=None):
+# Minimal handler that should work with Vercel's Python runtime
+def handler(request):
     """
     Vercel serverless function entry point.
-    If res is provided, use it. Otherwise return a dict.
+    Returns a response dictionary.
     """
     try:
-        # Handle both formats: (req, res) and (req)
-        if res is not None:
-            # Format with res object
-            res.status(200).json({
-                'status': 'MCP Server Running',
-                'tools': ['get_rss_feed'],
-                'message': 'MCP server is ready. RSS feed fetching available.',
-                'endpoint': '/sse',
-                'version': '1.0.0'
-            })
-            return
+        # Get path from request - Vercel passes request as dict
+        path = '/'
+        if isinstance(request, dict):
+            path = request.get('path', '/')
+            # Also check url field
+            if 'url' in request:
+                from urllib.parse import urlparse
+                parsed = urlparse(request['url'])
+                path = parsed.path
         
-        # Format returning dict (for @vercel/python)
-        # Get path from request
-        if isinstance(req, dict):
-            path = req.get('path', '/')
-        else:
-            path = '/'
-        
-        if path == '/sse' or path == '/':
+        # Handle root and SSE endpoint
+        if path in ['/', '/sse']:
             return {
                 'statusCode': 200,
                 'headers': {
@@ -39,7 +31,8 @@ def handler(req, res=None):
                     'tools': ['get_rss_feed'],
                     'message': 'MCP server is ready. RSS feed fetching available.',
                     'endpoint': '/sse',
-                    'version': '1.0.0'
+                    'version': '1.0.0',
+                    'path': path
                 })
             }
         else:
@@ -49,16 +42,15 @@ def handler(req, res=None):
                 'body': json.dumps({'error': 'Not Found', 'path': path})
             }
     except Exception as e:
-        # Error handling
-        if res is not None:
-            res.status(500).json({'error': 'Internal Server Error', 'message': str(e)})
-            return
-        
+        # Return error with details for debugging
+        import traceback
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json'},
             'body': json.dumps({
                 'error': 'Internal Server Error',
-                'message': str(e)
+                'message': str(e),
+                'type': type(e).__name__,
+                'traceback': traceback.format_exc()
             })
         }
