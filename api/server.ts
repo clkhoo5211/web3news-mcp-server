@@ -1,48 +1,35 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Vercel serverless function handler
+// Minimal test handler to isolate the issue
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method === 'GET') {
+    res.status(200).json({
+      status: 'MCP Server Running',
+      tools: ['get_rss_feed'],
+      message: 'Use MCP client to connect via SSE transport',
+      protocolVersion: '2024-11-05',
+    });
+    return;
+  }
+
+  // Handle POST requests
   try {
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    if (req.method === 'OPTIONS') {
-      res.status(200).end();
-      return;
-    }
-
-    if (req.method === 'GET') {
-      res.status(200).json({
-        status: 'MCP Server Running',
-        tools: ['get_rss_feed'],
-        message: 'Use MCP client to connect via SSE transport',
-        protocolVersion: '2024-11-05',
-      });
-      return;
-    }
-
-    // Handle POST requests for MCP protocol
     let body: any = {};
     
-    try {
-      // Parse request body
-      if (typeof req.body === 'string') {
-        body = JSON.parse(req.body);
-      } else if (req.body) {
-        body = req.body;
-      }
-    } catch (parseError) {
-      res.status(400).json({
-        jsonrpc: '2.0',
-        id: null,
-        error: {
-          code: -32700,
-          message: 'Parse error',
-        },
-      });
-      return;
+    if (typeof req.body === 'string') {
+      body = JSON.parse(req.body);
+    } else if (req.body) {
+      body = req.body;
     }
     
     // Handle MCP protocol initialization
@@ -79,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 properties: {
                   feed_url: {
                     type: 'string',
-                    description: 'The URL of the RSS feed to fetch (e.g., https://cointelegraph.com/rss)',
+                    description: 'The URL of the RSS feed to fetch',
                   },
                 },
                 required: ['feed_url'],
@@ -91,7 +78,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Handle tool calls
+    // Handle tool calls - simplified for testing
     if (body.method === 'tools/call') {
       const { name, arguments: args } = body.params || {};
       
@@ -111,11 +98,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         try {
-          // Dynamic import to avoid issues with ES modules
+          // Try dynamic import
           const rssParserModule = await import('rss-parser');
           const htmlToTextModule = await import('html-to-text');
           
-          const Parser = rssParserModule.default || rssParserModule;
+          // Handle default export
+          const Parser = (rssParserModule.default || rssParserModule) as any;
           const { convert } = htmlToTextModule;
           
           const rssParser = new Parser();
@@ -157,13 +145,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           });
           return;
         } catch (error: any) {
-          console.error('RSS fetch error:', error);
           res.status(200).json({
             jsonrpc: '2.0',
             id: body.id,
             error: {
               code: -32603,
-              message: `Error fetching RSS feed: ${error.message || 'Unknown error'}`,
+              message: `Error: ${error.message || 'Unknown error'}`,
             },
           });
           return;
@@ -181,7 +168,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Handle other MCP protocol methods
+    // Default response
     res.status(200).json({
       jsonrpc: '2.0',
       id: body.id || 1,
@@ -191,14 +178,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
     });
   } catch (error: any) {
-    // Better error handling with details
-    console.error('Handler error:', error);
-    console.error('Error stack:', error.stack);
     res.status(500).json({
       error: error.message || 'Internal server error',
       type: error.constructor?.name || 'Unknown',
-      // Include stack in response for debugging (remove in production)
-      stack: error.stack,
     });
   }
 }
