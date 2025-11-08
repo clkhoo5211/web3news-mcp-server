@@ -1,50 +1,69 @@
-# Web3News MCP Server
+# Web3News MCP Server - TypeScript Version
 
-MCP (Model Context Protocol) server for fetching RSS feeds, deployed on Vercel.
+MCP (Model Context Protocol) server for fetching RSS feeds, deployed on Vercel using the official TypeScript template.
 
 ## Features
 
 - Fetch RSS feeds from any URL
 - Parse and format feed content as Markdown
 - Deployed as serverless function on Vercel
-- SSE (Server-Sent Events) transport for MCP protocol
+- Uses official Vercel MCP template structure
 
-## Deployment
+## Setup
 
 ### Prerequisites
 
-- GitHub account
-- Vercel account (free tier works)
+- Node.js 18+ 
+- pnpm (recommended) or npm
+- Vercel account
 
-### Steps
+### Installation
 
-1. **Push to GitHub:**
+```bash
+pnpm install
+# or
+npm install
+```
+
+### Local Development
+
+```bash
+pnpm dev
+# or
+npm run dev
+```
+
+## Deployment
+
+### Deploy to Vercel
+
+1. **Connect to Vercel:**
    ```bash
-   git init
-   git add .
-   git commit -m "Initial MCP server"
-   git remote add origin https://github.com/clkhoo5211/web3news-mcp-server.git
-   git push -u origin main
+   vercel link
    ```
 
-2. **Deploy to Vercel:**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import `web3news-mcp-server` repository
-   - Vercel will auto-detect Python
-   - Click "Deploy"
-   - Get your deployment URL: `https://your-app.vercel.app`
+2. **Deploy:**
+   ```bash
+   vercel deploy
+   ```
 
-3. **Configure GitHub Repo Settings:**
-   - Go to repo Settings → General
-   - Set default branch to `main` (if not already)
-   - Enable "Allow auto-merge" (optional)
-   - Under "Features", ensure "Issues" and "Pull requests" are enabled
+3. **Or use GitHub integration:**
+   - Push to GitHub
+   - Vercel auto-deploys
 
-## Endpoints
+### Environment Variables
 
-- `/sse` - SSE transport endpoint for MCP protocol
-- `/` - Root endpoint (redirects to SSE)
+**Required:**
+- `REDIS_URL` - Redis connection string (use Upstash for free Redis)
+
+**Optional:**
+- None
+
+### Enable Fluid Compute
+
+1. Go to Vercel Dashboard → Project Settings
+2. Enable "Fluid Compute"
+3. This optimizes performance for MCP servers
 
 ## Usage
 
@@ -59,7 +78,7 @@ const client = new Client({
 }, {
   transport: {
     type: 'sse',
-    url: 'https://your-app.vercel.app/sse',
+    url: 'https://your-app.vercel.app',
   },
 });
 
@@ -71,33 +90,30 @@ const result = await client.callTool({
 await client.close();
 ```
 
-## Environment Variables
-
-No environment variables required for basic operation.
-
-## Local Development
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run locally (requires FastMCP CLI)
-mcp dev api/index.py
-```
-
 ## Project Structure
 
 ```
 web3news-mcp-server/
 ├── api/
-│   └── index.py          # Vercel serverless function
-├── vercel.json           # Vercel configuration
-├── requirements.txt      # Python dependencies
-├── README.md            # This file
-└── .gitignore           # Git ignore file
+│   └── server.ts          # Main MCP server (TypeScript)
+├── package.json           # Node.js dependencies
+├── tsconfig.json          # TypeScript configuration
+├── vercel.json            # Vercel configuration
+└── README.md             # This file
 ```
+
+## Tools
+
+### get_rss_feed
+
+Retrieve RSS feed content.
+
+**Parameters:**
+- `feed_url` (string, required): URL of the RSS feed
+
+**Returns:**
+- Formatted Markdown string with feed title and up to 10 latest entries
 
 ## License
 
 MIT
-

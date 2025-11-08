@@ -1,0 +1,24 @@
+{
+  "name": "web3news-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for fetching RSS feeds, deployed on Vercel",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@vercel/node": "^3.0.0",
+    "rss-parser": "^3.13.0",
+    "html-to-text": "^9.0.1",
+    "ioredis": "^5.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vercel": "^48.0.0"
+  }
+}
+
