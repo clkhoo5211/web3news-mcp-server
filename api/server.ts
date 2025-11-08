@@ -1,123 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
-import Parser from 'rss-parser';
-import { convert } from 'html-to-text';
-
-// Initialize RSS parser
-const rssParser = new Parser();
-
-// Initialize MCP server
-const server = new Server(
-  {
-    name: 'web3news-mcp-server',
-    version: '1.0.0',
-  },
-  {
-    capabilities: {
-      tools: {},
-    },
-  }
-);
-
-// Helper function to fetch RSS feed
-async function fetchRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
-  try {
-    const feed = await rssParser.parseURL(url);
-    return {
-      title: feed.title || 'Unknown',
-      items: feed.items.slice(0, 10), // Limit to 10 entries
-    };
-  } catch (error: any) {
-    throw new Error(`Failed to fetch RSS feed: ${error.message}`);
-  }
-}
-
-// List available tools
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: 'get_rss_feed',
-        description: 'Retrieve the content of the specified RSS feed',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            feed_url: {
-              type: 'string',
-              description: 'The URL of the RSS feed to fetch (e.g., https://cointelegraph.com/rss)',
-            },
-          },
-          required: ['feed_url'],
-        },
-      },
-    ],
-  };
-});
-
-// Handle tool calls
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
-
-  if (name === 'get_rss_feed') {
-    const feedUrl = args?.feed_url as string;
-    
-    if (!feedUrl) {
-      throw new Error('feed_url is required');
-    }
-
-    try {
-      const feed = await fetchRSSFeed(feedUrl);
-      
-      // Convert HTML to text
-      const htmlToTextOptions = {
-        wordwrap: false as const,
-        ignoreLinks: true,
-        ignoreImages: true,
-      };
-
-      let result = `# Feed: ${feed.title}\n\n`;
-      
-      feed.items.forEach((entry: any, i: number) => {
-        const summary = entry.contentSnippet || entry.content || entry.description || '';
-        const summaryText = convert(summary, htmlToTextOptions).trim();
-        
-        result += `## Entry ${i + 1}\n`;
-        result += `- **Title**: ${entry.title || 'No title'}\n`;
-        result += `- **Link**: [${entry.link || '#'}](${entry.link || '#'})\n`;
-        result += `- **Published**: ${entry.pubDate || entry.isoDate || 'Unknown date'}\n`;
-        if (summaryText) {
-          result += `- **Summary**: ${summaryText}\n`;
-        }
-        result += '\n';
-      });
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: result,
-          },
-        ],
-      };
-    } catch (error: any) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Error fetching RSS feed: ${error.message}`,
-          },
-        ],
-        isError: true,
-      };
-    }
-  }
-
-  throw new Error(`Unknown tool: ${name}`);
-});
 
 // Vercel serverless function handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -142,13 +23,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Handle POST requests for MCP protocol
-  // For full SSE support, we'd need Redis and proper session management
-  // This is a simplified version
   try {
-    const body = req.body;
+    const body = req.body || {};
     
     // Handle MCP protocol initialization
-    if (body?.method === 'initialize') {
+    if (body.method === 'initialize') {
       res.status(200).json({
         jsonrpc: '2.0',
         id: body.id,
@@ -166,10 +45,123 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
+    // Handle tool listing
+    if (body.method === 'tools/list') {
+      res.status(200).json({
+        jsonrpc: '2.0',
+        id: body.id,
+        result: {
+          tools: [
+            {
+              name: 'get_rss_feed',
+              description: 'Retrieve the content of the specified RSS feed',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  feed_url: {
+                    type: 'string',
+                    description: 'The URL of the RSS feed to fetch (e.g., https://cointelegraph.com/rss)',
+                  },
+                },
+                required: ['feed_url'],
+              },
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    // Handle tool calls
+    if (body.method === 'tools/call') {
+      const { name, arguments: args } = body.params || {};
+      
+      if (name === 'get_rss_feed') {
+        const feedUrl = args?.feed_url;
+        
+        if (!feedUrl) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32602,
+              message: 'feed_url is required',
+            },
+          });
+          return;
+        }
+
+        try {
+          // Dynamic import to avoid issues with ES modules
+          const Parser = (await import('rss-parser')).default;
+          const { convert } = await import('html-to-text');
+          
+          const rssParser = new Parser();
+          const feed = await rssParser.parseURL(feedUrl);
+          
+          const htmlToTextOptions = {
+            wordwrap: false as const,
+            ignoreLinks: true,
+            ignoreImages: true,
+          };
+
+          let result = `# Feed: ${feed.title || 'Unknown'}\n\n`;
+          
+          (feed.items || []).slice(0, 10).forEach((entry: any, i: number) => {
+            const summary = entry.contentSnippet || entry.content || entry.description || '';
+            const summaryText = convert(summary, htmlToTextOptions).trim();
+            
+            result += `## Entry ${i + 1}\n`;
+            result += `- **Title**: ${entry.title || 'No title'}\n`;
+            result += `- **Link**: [${entry.link || '#'}](${entry.link || '#'})\n`;
+            result += `- **Published**: ${entry.pubDate || entry.isoDate || 'Unknown date'}\n`;
+            if (summaryText) {
+              result += `- **Summary**: ${summaryText}\n`;
+            }
+            result += '\n';
+          });
+
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            result: {
+              content: [
+                {
+                  type: 'text',
+                  text: result,
+                },
+              ],
+            },
+          });
+          return;
+        } catch (error: any) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32603,
+              message: `Error fetching RSS feed: ${error.message}`,
+            },
+          });
+          return;
+        }
+      }
+
+      res.status(200).json({
+        jsonrpc: '2.0',
+        id: body.id,
+        error: {
+          code: -32601,
+          message: `Unknown tool: ${name}`,
+        },
+      });
+      return;
+    }
+
     // Handle other MCP protocol methods
     res.status(200).json({
       jsonrpc: '2.0',
-      id: body?.id || 1,
+      id: body.id || 1,
       error: {
         code: -32601,
         message: 'Method not found',
@@ -177,7 +169,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   } catch (error: any) {
     res.status(500).json({
-      error: error.message,
+      error: error.message || 'Internal server error',
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
     });
   }
 }
