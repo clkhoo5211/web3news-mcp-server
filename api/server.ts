@@ -12,7 +12,8 @@ async function loadNewsSources() {
   if (newsSourcesLoaded) return;
   
   try {
-    const newsSourcesModule = await import('./newsSources');
+    // Use .js extension for ESM compatibility in Vercel
+    const newsSourcesModule = await import('./newsSources.js');
     NEWS_SOURCES = newsSourcesModule.NEWS_SOURCES || [];
     getSourcesByCategory = newsSourcesModule.getSourcesByCategory;
     getSourceByName = newsSourcesModule.getSourceByName;
@@ -290,7 +291,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Lazy load if not already loaded
           if (!getSourcesByCategory || NEWS_SOURCES.length === 0) {
             try {
-              const newsSourcesModule = await import('./newsSources');
+              const newsSourcesModule = await import('./newsSources.js');
               NEWS_SOURCES = newsSourcesModule.NEWS_SOURCES || [];
               getSourcesByCategory = newsSourcesModule.getSourcesByCategory;
               getSourceByName = newsSourcesModule.getSourceByName;
