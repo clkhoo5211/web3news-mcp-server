@@ -1,12 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": ".",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/server.ts"
-    }
-  ],
   "functions": {
     "api/server.ts": {
       "maxDuration": 60
