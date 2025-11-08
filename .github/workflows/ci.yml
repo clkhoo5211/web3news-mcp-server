@@ -45,7 +45,7 @@ jobs:
 
     - name: Test imports
       run: |
-        node -e "import('./api/server.ts').then(() => console.log('✅ Server module can be imported')).catch(e => console.error('❌ Import error:', e.message))"
+        node --input-type=module --eval "import('./api/server.ts').then(() => console.log('✅ Server module can be imported')).catch(e => console.error('❌ Import error:', e.message))"
       continue-on-error: true
 
     - name: Summary
