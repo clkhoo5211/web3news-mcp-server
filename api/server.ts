@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { convert } from 'html-to-text';
 
 // Simple RSS parser using native fetch and regex-based XML parsing
 async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
@@ -139,10 +140,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
           // Parse RSS feed using native fetch and regex
           const feed = await parseRSSFeed(feedUrl);
-          
-          // Import html-to-text dynamically
-          const htmlToTextModule = await import('html-to-text');
-          const { convert } = htmlToTextModule;
           
           const htmlToTextOptions = {
             wordwrap: false as const,
