@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Vercel (Optional)
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Only run if Vercel token is configured (optional workflow)
+    if: ${{ secrets.VERCEL_TOKEN != '' }}
     
     steps:
     - name: Checkout code
@@ -38,4 +40,14 @@ jobs:
       run: |
         echo "✅ Deployment completed successfully"
         echo "🚀 Your MCP server is live on Vercel"
+
+  skip-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.VERCEL_TOKEN == '' }}
+    steps:
+    - name: Skip Deployment
+      run: |
+        echo "ℹ️  Vercel token not configured - skipping GitHub Actions deployment"
+        echo "✅ Vercel will auto-deploy on push (if connected in Vercel dashboard)"
+        echo "📝 To enable GitHub Actions deployment, add VERCEL_TOKEN secret"
 
