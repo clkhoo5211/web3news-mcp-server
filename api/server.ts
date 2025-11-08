@@ -24,7 +24,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Handle POST requests for MCP protocol
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    let body: any = {};
+    
+    try {
+      // Parse request body
+      if (typeof req.body === 'string') {
+        body = JSON.parse(req.body);
+      } else if (req.body) {
+        body = req.body;
+      }
+    } catch (parseError) {
+      res.status(400).json({
+        jsonrpc: '2.0',
+        id: null,
+        error: {
+          code: -32700,
+          message: 'Parse error',
+        },
+      });
+      return;
+    }
     
     // Handle MCP protocol initialization
     if (body.method === 'initialize') {
@@ -93,8 +112,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         try {
           // Dynamic import to avoid issues with ES modules
-          const Parser = (await import('rss-parser')).default;
-          const { convert } = await import('html-to-text');
+          const rssParserModule = await import('rss-parser');
+          const htmlToTextModule = await import('html-to-text');
+          
+          const Parser = rssParserModule.default || rssParserModule;
+          const { convert } = htmlToTextModule;
           
           const rssParser = new Parser();
           const feed = await rssParser.parseURL(feedUrl);
@@ -135,12 +157,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           });
           return;
         } catch (error: any) {
+          console.error('RSS fetch error:', error);
           res.status(200).json({
             jsonrpc: '2.0',
             id: body.id,
             error: {
               code: -32603,
-              message: `Error fetching RSS feed: ${error.message}`,
+              message: `Error fetching RSS feed: ${error.message || 'Unknown error'}`,
             },
           });
           return;
@@ -170,10 +193,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error: any) {
     // Better error handling with details
     console.error('Handler error:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       error: error.message || 'Internal server error',
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       type: error.constructor?.name || 'Unknown',
+      // Include stack in response for debugging (remove in production)
+      stack: error.stack,
     });
   }
 }
