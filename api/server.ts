@@ -140,8 +140,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           // Parse RSS feed using native fetch and regex
           const feed = await parseRSSFeed(feedUrl);
           
-          // Lazy import html-to-text only when needed
-          const { convert } = await import('html-to-text');
+          // Try to convert HTML to text, but fallback to raw text if html-to-text fails
+          let convertHtmlToText: (html: string, options?: any) => string;
+          try {
+            const htmlToTextModule = await import('html-to-text');
+            convertHtmlToText = htmlToTextModule.convert;
+          } catch (importError) {
+            // Fallback: simple HTML tag removal if html-to-text not available
+            convertHtmlToText = (html: string) => {
+              return html
+                .replace(/<[^>]*>/g, '') // Remove HTML tags
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .trim();
+            };
+          }
           
           const htmlToTextOptions = {
             wordwrap: false as const,
@@ -153,7 +170,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           
           feed.items.forEach((entry: any, i: number) => {
             const summary = entry.description || entry.content || '';
-            const summaryText = convert(summary, htmlToTextOptions).trim();
+            const summaryText = convertHtmlToText(summary, htmlToTextOptions).trim();
             
             result += `## Entry ${i + 1}\n`;
             result += `- **Title**: ${entry.title || 'No title'}\n`;
