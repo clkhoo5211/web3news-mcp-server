@@ -1,56 +1,45 @@
 import json
 
 # Vercel Python serverless function handler
-# Minimal handler that should work with Vercel's Python runtime
+# Based on Vercel's Python runtime documentation
 def handler(request):
     """
-    Vercel serverless function entry point.
-    Returns a response dictionary.
+    Vercel Python serverless function handler.
+    The handler function is called by Vercel's Python runtime.
     """
-    try:
-        # Get path from request - Vercel passes request as dict
-        path = '/'
-        if isinstance(request, dict):
-            path = request.get('path', '/')
-            # Also check url field
-            if 'url' in request:
-                from urllib.parse import urlparse
-                parsed = urlparse(request['url'])
-                path = parsed.path
-        
-        # Handle root and SSE endpoint
-        if path in ['/', '/sse']:
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
-                'body': json.dumps({
-                    'status': 'MCP Server Running',
-                    'tools': ['get_rss_feed'],
-                    'message': 'MCP server is ready. RSS feed fetching available.',
-                    'endpoint': '/sse',
-                    'version': '1.0.0',
-                    'path': path
-                })
-            }
-        else:
-            return {
-                'statusCode': 404,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({'error': 'Not Found', 'path': path})
-            }
-    except Exception as e:
-        # Return error with details for debugging
-        import traceback
+    # Vercel passes request as a dictionary
+    # Try to extract path from various possible fields
+    path = '/'
+    
+    if isinstance(request, dict):
+        # Try different possible fields
+        path = request.get('path', request.get('url', '/'))
+        if isinstance(path, str) and path.startswith('http'):
+            from urllib.parse import urlparse
+            parsed = urlparse(path)
+            path = parsed.path
+    
+    # Handle root and SSE endpoint
+    if path in ['/', '/sse']:
         return {
-            'statusCode': 500,
-            'headers': {'Content-Type': 'application/json'},
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
             'body': json.dumps({
-                'error': 'Internal Server Error',
-                'message': str(e),
-                'type': type(e).__name__,
-                'traceback': traceback.format_exc()
+                'status': 'MCP Server Running',
+                'tools': ['get_rss_feed'],
+                'message': 'MCP server is ready.',
+                'endpoint': '/sse',
+                'version': '1.0.0',
+                'request_type': str(type(request)),
+                'request_keys': list(request.keys()) if isinstance(request, dict) else 'not a dict'
             })
+        }
+    else:
+        return {
+            'statusCode': 404,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'error': 'Not Found', 'path': path})
         }
