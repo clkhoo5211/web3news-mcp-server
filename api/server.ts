@@ -1,5 +1,28 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { NEWS_SOURCES, getSourcesByCategory, getSourceByName, getAllCategories } from './newsSources';
+
+// Lazy import newsSources to prevent initialization errors
+let NEWS_SOURCES: any[] = [];
+let getSourcesByCategory: ((category: string) => any[]) | null = null;
+let getSourceByName: ((name: string) => any) | null = null;
+let getAllCategories: (() => string[]) | null = null;
+let newsSourcesLoaded = false;
+
+// Function to load newsSources module
+async function loadNewsSources() {
+  if (newsSourcesLoaded) return;
+  
+  try {
+    const newsSourcesModule = await import('./newsSources');
+    NEWS_SOURCES = newsSourcesModule.NEWS_SOURCES || [];
+    getSourcesByCategory = newsSourcesModule.getSourcesByCategory;
+    getSourceByName = newsSourcesModule.getSourceByName;
+    getAllCategories = newsSourcesModule.getAllCategories;
+    newsSourcesLoaded = true;
+  } catch (error) {
+    console.error('Failed to load newsSources:', error);
+    // Continue without newsSources - fallback to basic functionality
+  }
+}
 
 // Simple RSS parser using native fetch and regex-based XML parsing
 async function parseRSSFeed(url: string): Promise<{ title: string; items: any[] }> {
@@ -264,8 +287,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // List news sources
       if (name === 'list_news_sources') {
         try {
+          // Lazy load if not already loaded
+          if (!getSourcesByCategory || NEWS_SOURCES.length === 0) {
+            try {
+              const newsSourcesModule = await import('./newsSources');
+              NEWS_SOURCES = newsSourcesModule.NEWS_SOURCES || [];
+              getSourcesByCategory = newsSourcesModule.getSourcesByCategory;
+              getSourceByName = newsSourcesModule.getSourceByName;
+              getAllCategories = newsSourcesModule.getAllCategories;
+            } catch (importError) {
+              res.status(200).json({
+                jsonrpc: '2.0',
+                id: body.id,
+                error: {
+                  code: -32603,
+                  message: `Failed to load news sources: ${(importError as Error).message}`,
+                },
+              });
+              return;
+            }
+          }
+
           const category = args?.category;
-          const sources = category ? getSourcesByCategory(category) : NEWS_SOURCES;
+          const sources = category && getSourcesByCategory 
+            ? getSourcesByCategory(category) 
+            : NEWS_SOURCES;
+          
+          const categories = getAllCategories ? getAllCategories() : [];
           
           const result = `# Available News Sources${category ? ` (Category: ${category})` : ''}\n\n` +
             `Total: ${sources.length} sources\n\n` +
@@ -276,7 +324,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               `   - URL: ${source.url}\n` +
               `   - Verified: ${source.verified ? '✅' : '❌'}\n`
             ).join('\n') +
-            `\n\nAvailable categories: ${getAllCategories().join(', ')}`;
+            `\n\nAvailable categories: ${categories.join(', ') || 'N/A'}`;
 
           res.status(200).json({
             jsonrpc: '2.0',
@@ -307,6 +355,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Get news by category
       if (name === 'get_news_by_category') {
         try {
+          // Lazy load if not already loaded
+          if (!newsSourcesLoaded) {
+            await loadNewsSources();
+          }
+
           const category = args?.category;
           const maxItemsPerSource = args?.max_items_per_source || 5;
 
@@ -322,15 +375,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return;
           }
 
+          if (!getSourcesByCategory) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32603,
+                message: 'News sources module not loaded',
+              },
+            });
+            return;
+          }
+
           const sources = getSourcesByCategory(category);
           
           if (sources.length === 0) {
+            const categories = getAllCategories ? getAllCategories() : [];
             res.status(200).json({
               jsonrpc: '2.0',
               id: body.id,
               error: {
                 code: -32602,
-                message: `No sources found for category: ${category}. Available categories: ${getAllCategories().join(', ')}`,
+                message: `No sources found for category: ${category}. Available categories: ${categories.join(', ') || 'N/A'}`,
               },
             });
             return;
@@ -411,6 +477,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Get news by source name
       if (name === 'get_news_by_source') {
         try {
+          // Lazy load if not already loaded
+          if (!newsSourcesLoaded) {
+            await loadNewsSources();
+          }
+
           const sourceName = args?.source_name;
           const maxItems = args?.max_items || 10;
 
@@ -421,6 +492,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               error: {
                 code: -32602,
                 message: 'source_name is required',
+              },
+            });
+            return;
+          }
+
+          if (!getSourceByName) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32603,
+                message: 'News sources module not loaded',
               },
             });
             return;
