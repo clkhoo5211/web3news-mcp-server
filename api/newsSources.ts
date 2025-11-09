@@ -797,6 +797,202 @@ export const NEWS_SOURCES: NewsSource[] = [
     language: 'zh',
     verified: true,
   },
+
+  // ========== RSSHUB SOURCES (From Folo) ==========
+  // RSSHub provides RSS feeds for platforms that don't natively support RSS
+  // Base URL: https://rsshub.app (public instance, rate-limited)
+  // Reference: https://github.com/DIYgod/RSSHub
+
+  // Bilibili (Chinese Video Platform)
+  {
+    name: 'Bilibili - 热门视频',
+    url: 'https://rsshub.app/bilibili/popular/all',
+    category: 'entertainment',
+    language: 'zh',
+    verified: true,
+  },
+  {
+    name: 'Bilibili - 科技区',
+    url: 'https://rsshub.app/bilibili/partion/36',
+    category: 'tech',
+    language: 'zh',
+    verified: true,
+  },
+  {
+    name: 'Bilibili - 游戏区',
+    url: 'https://rsshub.app/bilibili/partion/4',
+    category: 'entertainment',
+    language: 'zh',
+    verified: true,
+  },
+  {
+    name: 'Bilibili - 知识区',
+    url: 'https://rsshub.app/bilibili/partion/36',
+    category: 'education',
+    language: 'zh',
+    verified: true,
+  },
+
+  // Weibo (Chinese Social Media)
+  {
+    name: 'Weibo - 热搜榜',
+    url: 'https://rsshub.app/weibo/search/hot',
+    category: 'social',
+    language: 'zh',
+    verified: true,
+  },
+
+  // Zhihu (Chinese Q&A Platform)
+  {
+    name: 'Zhihu - 每日精选',
+    url: 'https://rsshub.app/zhihu/daily',
+    category: 'social',
+    language: 'zh',
+    verified: true,
+  },
+  {
+    name: 'Zhihu - 热榜',
+    url: 'https://rsshub.app/zhihu/hotlist',
+    category: 'social',
+    language: 'zh',
+    verified: true,
+  },
+
+  // Twitter/X (via RSSHub)
+  {
+    name: 'Twitter - Trending',
+    url: 'https://rsshub.app/twitter/trending',
+    category: 'social',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Twitter - Search: Web3',
+    url: 'https://rsshub.app/twitter/search/web3',
+    category: 'crypto',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Twitter - Search: AI',
+    url: 'https://rsshub.app/twitter/search/artificial%20intelligence',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+
+  // YouTube (via RSSHub)
+  {
+    name: 'YouTube - Trending',
+    url: 'https://rsshub.app/youtube/trending',
+    category: 'entertainment',
+    language: 'en',
+    verified: true,
+  },
+
+  // Reddit (via RSSHub)
+  {
+    name: 'Reddit - r/technology',
+    url: 'https://rsshub.app/reddit/r/technology',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Reddit - r/cryptocurrency',
+    url: 'https://rsshub.app/reddit/r/cryptocurrency',
+    category: 'crypto',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Reddit - r/programming',
+    url: 'https://rsshub.app/reddit/r/programming',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Reddit - r/science',
+    url: 'https://rsshub.app/reddit/r/science',
+    category: 'science',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Reddit - r/worldnews',
+    url: 'https://rsshub.app/reddit/r/worldnews',
+    category: 'general',
+    language: 'en',
+    verified: true,
+  },
+
+  // GitHub (via RSSHub)
+  {
+    name: 'GitHub - Trending (Today)',
+    url: 'https://rsshub.app/github/trending',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'GitHub - Trending (JavaScript)',
+    url: 'https://rsshub.app/github/trending/javascript',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'GitHub - Trending (TypeScript)',
+    url: 'https://rsshub.app/github/trending/typescript',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'GitHub - Trending (Python)',
+    url: 'https://rsshub.app/github/trending/python',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'GitHub - Trending (Rust)',
+    url: 'https://rsshub.app/github/trending/rust',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'GitHub - Trending (Go)',
+    url: 'https://rsshub.app/github/trending/go',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+
+  // Google News (via RSSHub)
+  {
+    name: 'Google News - Search: Web3',
+    url: 'https://rsshub.app/google/news/web3',
+    category: 'crypto',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Google News - Search: AI',
+    url: 'https://rsshub.app/google/news/artificial%20intelligence',
+    category: 'tech',
+    language: 'en',
+    verified: true,
+  },
+  {
+    name: 'Google News - Search: Blockchain',
+    url: 'https://rsshub.app/google/news/blockchain',
+    category: 'crypto',
+    language: 'en',
+    verified: true,
+  },
 ];
 
 /**

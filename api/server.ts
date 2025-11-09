@@ -187,7 +187,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 properties: {
                   category: {
                     type: 'string',
-                    description: 'Category name (general, tech, business, crypto, science, health, sports, entertainment, politics, environment)',
+                    description: 'Category name (general, tech, business, crypto, science, health, sports, entertainment, politics, environment, social, education)',
                   },
                   max_items_per_source: {
                     type: 'number',
