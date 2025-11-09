@@ -7,11 +7,37 @@ let getSourceByName: ((name: string) => any) | null = null;
 let getAllCategories: (() => string[]) | null = null;
 let newsSourcesLoaded = false;
 
-// Function to load newsSources module
+// Function to load newsSources module (with environment variable support)
 async function loadNewsSources() {
   if (newsSourcesLoaded) return;
   
   try {
+    // Try loading from environment variables first
+    const envSourcesJson = process.env.NEWS_SOURCES_JSON;
+    if (envSourcesJson) {
+      try {
+        const parsed = JSON.parse(envSourcesJson);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          NEWS_SOURCES = parsed;
+          console.log(`[MCP Server] ✅ Loaded ${NEWS_SOURCES.length} news sources from environment variables`);
+          
+          // Create helper functions for env-loaded sources
+          getSourcesByCategory = (category: string) => 
+            NEWS_SOURCES.filter((s: any) => s.category === category);
+          getSourceByName = (name: string) => 
+            NEWS_SOURCES.find((s: any) => s.name === name);
+          getAllCategories = () => 
+            Array.from(new Set(NEWS_SOURCES.map((s: any) => s.category)));
+          
+          newsSourcesLoaded = true;
+          return;
+        }
+      } catch (error) {
+        console.error('[MCP Server] ❌ Failed to parse NEWS_SOURCES_JSON, falling back to default:', error);
+      }
+    }
+    
+    // Fallback to default newsSources module
     // Use .js extension for ESM compatibility in Vercel
     const newsSourcesModule = await import('./newsSources.js');
     NEWS_SOURCES = newsSourcesModule.NEWS_SOURCES || [];
@@ -19,6 +45,7 @@ async function loadNewsSources() {
     getSourceByName = newsSourcesModule.getSourceByName;
     getAllCategories = newsSourcesModule.getAllCategories;
     newsSourcesLoaded = true;
+    console.log(`[MCP Server] ✅ Loaded ${NEWS_SOURCES.length} default news sources`);
   } catch (error) {
     console.error('Failed to load newsSources:', error);
     // Continue without newsSources - fallback to basic functionality

@@ -1,0 +1,218 @@
+[36m
+🧪 Starting comprehensive source verification...
+[0m
+[34m📊 Total sources to test: 130
+[0m
+[1/130] Testing: Google News - Top Stories                ... [32m✅ SUCCESS[0m
+[2/130] Testing: Google News - World                      ... [32m✅ SUCCESS[0m
+[3/130] Testing: Yahoo News - Top Stories                 ... [32m✅ SUCCESS[0m
+[4/130] Testing: Yahoo News - World                       ... [32m✅ SUCCESS[0m
+[5/130] Testing: Baidu News - 热点                          ... [31m❌ FAILED: No valid content[0m
+[6/130] Testing: BBC News - Top Stories                   ... [32m✅ SUCCESS[0m
+[7/130] Testing: CNN - Top Stories                        ... [32m✅ SUCCESS[0m
+[8/130] Testing: Reuters - World News                     ... [31m❌ FAILED: Error: fetch failed[0m
+[9/130] Testing: The Guardian - World                     ... [32m✅ SUCCESS[0m
+[10/130] Testing: Al Jazeera - All News                    ... [32m✅ SUCCESS[0m
+[11/130] Testing: Associated Press                         ... [31m❌ FAILED: No valid content[0m
+[12/130] Testing: MSN News                                 ... [31m❌ FAILED: No valid content[0m
+[13/130] Testing: DW News                                  ... [32m✅ SUCCESS[0m
+[14/130] Testing: UN News                                  ... [31m❌ FAILED: No valid content[0m
+[15/130] Testing: Google News - Technology                 ... [31m❌ FAILED: No valid content[0m
+[16/130] Testing: Yahoo Tech                               ... [32m✅ SUCCESS[0m
+[17/130] Testing: TechCrunch                               ... [32m✅ SUCCESS[0m
+[18/130] Testing: Wired                                    ... [32m✅ SUCCESS[0m
+[19/130] Testing: The Verge                                ... [31m❌ FAILED: No valid content[0m
+[20/130] Testing: Ars Technica                             ... [32m✅ SUCCESS[0m
+[21/130] Testing: Engadget                                 ... [32m✅ SUCCESS[0m
+[22/130] Testing: CNET                                     ... [32m✅ SUCCESS[0m
+[23/130] Testing: Mashable                                 ... [32m✅ SUCCESS[0m
+[24/130] Testing: HackerNoon                               ... [32m✅ SUCCESS[0m
+[25/130] Testing: MIT Technology Review                    ... [32m✅ SUCCESS[0m
+[26/130] Testing: The Next Web                             ... [32m✅ SUCCESS[0m
+[27/130] Testing: Medium                                   ... [31m❌ FAILED: No valid content[0m
+[28/130] Testing: Android Authority                        ... [32m✅ SUCCESS[0m
+[29/130] Testing: Baidu Tech - 科技                          ... [31m❌ FAILED: No valid content[0m
+[30/130] Testing: Google News - Business                   ... [32m✅ SUCCESS[0m
+[31/130] Testing: Yahoo Finance                            ... [32m✅ SUCCESS[0m
+[32/130] Testing: Bloomberg                                ... [32m✅ SUCCESS[0m
+[33/130] Testing: Financial Times                          ... [32m✅ SUCCESS[0m
+[34/130] Testing: Forbes                                   ... [31m❌ FAILED: No valid content[0m
+[35/130] Testing: CNBC                                     ... [32m✅ SUCCESS[0m
+[36/130] Testing: MarketWatch                              ... [32m✅ SUCCESS[0m
+[37/130] Testing: The Wall Street Journal                  ... [31m❌ FAILED: No valid content[0m
+[38/130] Testing: Business Insider                         ... [31m❌ FAILED: No valid content[0m
+[39/130] Testing: Investing.com                            ... [32m✅ SUCCESS[0m
+[40/130] Testing: Nasdaq                                   ... [32m✅ SUCCESS[0m
+[41/130] Testing: Fox Business                             ... [32m✅ SUCCESS[0m
+[42/130] Testing: Morningstar                              ... [31m❌ FAILED: No valid content[0m
+[43/130] Testing: Barron's                                 ... [31m❌ FAILED: No valid content[0m
+[44/130] Testing: Investors.com                            ... [32m✅ SUCCESS[0m
+[45/130] Testing: MarketBeat                               ... [31m❌ FAILED: No valid content[0m
+[46/130] Testing: Market Screener                          ... [31m❌ FAILED: No valid content[0m
+[47/130] Testing: Briefing.com                             ... [31m❌ FAILED: No valid content[0m
+[48/130] Testing: Baidu Finance - 财经                       ... [31m❌ FAILED: No valid content[0m
+[49/130] Testing: Google News - Cryptocurrency             ... [32m✅ SUCCESS[0m
+[50/130] Testing: CoinDesk                                 ... [32m✅ SUCCESS[0m
+[51/130] Testing: CoinTelegraph                            ... [32m✅ SUCCESS[0m
+[52/130] Testing: Decrypt                                  ... [32m✅ SUCCESS[0m
+[53/130] Testing: Bitcoin Magazine                         ... [32m✅ SUCCESS[0m
+[54/130] Testing: The Block                                ... [32m✅ SUCCESS[0m
+[55/130] Testing: CryptoSlate                              ... [32m✅ SUCCESS[0m
+[56/130] Testing: CoinMarketCap                            ... [31m❌ FAILED: No valid content[0m
+[57/130] Testing: Google News - Science                    ... [31m❌ FAILED: No valid content[0m
+[58/130] Testing: Yahoo Science                            ... [32m✅ SUCCESS[0m
+[59/130] Testing: ScienceDaily                             ... [32m✅ SUCCESS[0m
+[60/130] Testing: Nature                                   ... [31m❌ FAILED: No valid content[0m
+[61/130] Testing: Scientific American                      ... [31m❌ FAILED: No valid content[0m
+[62/130] Testing: New Scientist                            ... [32m✅ SUCCESS[0m
+[63/130] Testing: NASA Breaking News                       ... [32m✅ SUCCESS[0m
+[64/130] Testing: Google News - Health                     ... [31m❌ FAILED: No valid content[0m
+[65/130] Testing: Yahoo Health                             ... [32m✅ SUCCESS[0m
+[66/130] Testing: WebMD                                    ... [31m❌ FAILED: Request timeout[0m
+[67/130] Testing: Medical News Today                       ... [31m❌ FAILED: No valid content[0m
+[68/130] Testing: Healthline                               ... [31m❌ FAILED: No valid content[0m
+[69/130] Testing: Mayo Clinic                              ... [31m❌ FAILED: No valid content[0m
+[70/130] Testing: NPR Health                               ... [32m✅ SUCCESS[0m
+[71/130] Testing: Google News - Sports                     ... [31m❌ FAILED: No valid content[0m
+[72/130] Testing: Yahoo Sports                             ... [32m✅ SUCCESS[0m
+[73/130] Testing: ESPN                                     ... [32m✅ SUCCESS[0m
+[74/130] Testing: BBC Sport                                ... [32m✅ SUCCESS[0m
+[75/130] Testing: CBS Sports                               ... [32m✅ SUCCESS[0m
+[76/130] Testing: Sports Illustrated                       ... [31m❌ FAILED: No valid content[0m
+[77/130] Testing: Baidu Sports - 体育                        ... [31m❌ FAILED: No valid content[0m
+[78/130] Testing: Google News - Entertainment              ... [31m❌ FAILED: No valid content[0m
+[79/130] Testing: Yahoo Entertainment                      ... [32m✅ SUCCESS[0m
+[80/130] Testing: E! Online                                ... [32m✅ SUCCESS[0m
+[81/130] Testing: Variety                                  ... [32m✅ SUCCESS[0m
+[82/130] Testing: Rolling Stone                            ... [32m✅ SUCCESS[0m
+[83/130] Testing: TMZ                                      ... [32m✅ SUCCESS[0m
+[84/130] Testing: People                                   ... [31m❌ FAILED: No valid content[0m
+[85/130] Testing: Google News - Politics                   ... [31m❌ FAILED: No valid content[0m
+[86/130] Testing: Yahoo Politics                           ... [32m✅ SUCCESS[0m
+[87/130] Testing: Politico                                 ... [31m❌ FAILED: No valid content[0m
+[88/130] Testing: The Hill                                 ... [32m✅ SUCCESS[0m
+[89/130] Testing: BBC Politics                             ... [32m✅ SUCCESS[0m
+[90/130] Testing: NPR Politics                             ... [32m✅ SUCCESS[0m
+[91/130] Testing: Reuters Politics                         ... [31m❌ FAILED: No valid content[0m
+[92/130] Testing: Google News - Environment                ... [32m✅ SUCCESS[0m
+[93/130] Testing: BBC Environment                          ... [32m✅ SUCCESS[0m
+[94/130] Testing: Reuters Environment                      ... [31m❌ FAILED: No valid content[0m
+[95/130] Testing: The Guardian Environment                 ... [32m✅ SUCCESS[0m
+[96/130] Testing: Climate Change News                      ... [32m✅ SUCCESS[0m
+[97/130] Testing: Inside Climate News                      ... [32m✅ SUCCESS[0m
+[98/130] Testing: Bilibili - 热门视频 (RSSHub)                 ... [31m❌ FAILED: No valid content[0m
+[99/130] Testing: Bilibili - 科技区 (RSSHub)                  ... [31m❌ FAILED: No valid content[0m
+[100/130] Testing: Bilibili - 游戏区 (RSSHub)                  ... [31m❌ FAILED: No valid content[0m
+[101/130] Testing: Weibo - 热搜榜 (RSSHub)                     ... [31m❌ FAILED: No valid content[0m
+[102/130] Testing: 人民网 - 时政                                 ... [32m✅ SUCCESS[0m
+[103/130] Testing: 人民网 - 科技                                 ... [32m✅ SUCCESS[0m
+[104/130] Testing: 中新网 - 国内新闻                               ... [31m❌ FAILED: No valid content[0m
+[105/130] Testing: 中新网 - 国际新闻                               ... [31m❌ FAILED: No valid content[0m
+[106/130] Testing: 新京报                                      ... [31m❌ FAILED: No valid content[0m
+[107/130] Testing: 知乎 - 每日精选                                ... [31m❌ FAILED: No valid content[0m
+[108/130] Testing: 少数派                                      ... [32m✅ SUCCESS[0m
+[109/130] Testing: 极客公园                                     ... [32m✅ SUCCESS[0m
+[110/130] Testing: 爱范儿                                      ... [32m✅ SUCCESS[0m
+[111/130] Testing: cnBeta                                   ... [31m❌ FAILED: Error: fetch failed[0m
+[112/130] Testing: 什么值得买                                    ... [32m✅ SUCCESS[0m
+[113/130] Testing: 好奇心日报                                    ... [31m❌ FAILED: Error: fetch failed[0m
+[114/130] Testing: 36氪                                      ... [32m✅ SUCCESS[0m
+[115/130] Testing: 虎嗅网                                      ... [32m✅ SUCCESS[0m
+[116/130] Testing: 澎湃新闻                                     ... [31m❌ FAILED: No valid content[0m
+[117/130] Testing: 界面新闻                                     ... [31m❌ FAILED: No valid content[0m
+[118/130] Testing: 观察者网                                     ... [31m❌ FAILED: No valid content[0m
+[119/130] Testing: 财新网                                      ... [31m❌ FAILED: No valid content[0m
+[120/130] Testing: 第一财经                                     ... [31m❌ FAILED: No valid content[0m
+[121/130] Testing: 钛媒体                                      ... [32m✅ SUCCESS[0m
+[122/130] Testing: DoNews                                   ... [31m❌ FAILED: No valid content[0m
+[123/130] Testing: 雷锋网                                      ... [31m❌ FAILED: No valid content[0m
+[124/130] Testing: 快科技                                      ... [31m❌ FAILED: No valid content[0m
+[125/130] Testing: 游研社                                      ... [32m✅ SUCCESS[0m
+[126/130] Testing: 机核                                       ... [32m✅ SUCCESS[0m
+[127/130] Testing: 游戏葡萄                                     ... [31m❌ FAILED: No valid content[0m
+[128/130] Testing: 阮一峰的网络日志                                 ... [31m❌ FAILED: No valid content[0m
+[129/130] Testing: 小众软件                                     ... [32m✅ SUCCESS[0m
+[130/130] Testing: 异次元软件世界                                  ... [32m✅ SUCCESS[0m
+[36m
+═══════════════════════════════════════════════════════════[0m
+[36m📊 VERIFICATION SUMMARY[0m
+[36m═══════════════════════════════════════════════════════════
+[0m
+[32m✅ Verified: 74 sources (56.9%)[0m
+[31m❌ Failed: 56 sources[0m
+[34m📁 Verified sources saved to: VERIFIED_SOURCES.json[0m
+[33m📁 Failed sources saved to: FAILED_SOURCES.json
+[0m
+[33m⚠️  Failed Sources:[0m
+[31m  1. Baidu News - 热点 (general) - No valid RSS content returned[0m
+[31m  2. Reuters - World News (general) - Error: fetch failed[0m
+[31m  3. Associated Press (general) - No valid RSS content returned[0m
+[31m  4. MSN News (general) - No valid RSS content returned[0m
+[31m  5. UN News (general) - No valid RSS content returned[0m
+[31m  6. Google News - Technology (tech) - No valid RSS content returned[0m
+[31m  7. The Verge (tech) - No valid RSS content returned[0m
+[31m  8. Medium (tech) - No valid RSS content returned[0m
+[31m  9. Baidu Tech - 科技 (tech) - No valid RSS content returned[0m
+[31m  10. Forbes (business) - No valid RSS content returned[0m
+[31m  11. The Wall Street Journal (business) - No valid RSS content returned[0m
+[31m  12. Business Insider (business) - No valid RSS content returned[0m
+[31m  13. Morningstar (business) - No valid RSS content returned[0m
+[31m  14. Barron's (business) - No valid RSS content returned[0m
+[31m  15. MarketBeat (business) - No valid RSS content returned[0m
+[31m  16. Market Screener (business) - No valid RSS content returned[0m
+[31m  17. Briefing.com (business) - No valid RSS content returned[0m
+[31m  18. Baidu Finance - 财经 (business) - No valid RSS content returned[0m
+[31m  19. CoinMarketCap (crypto) - No valid RSS content returned[0m
+[31m  20. Google News - Science (science) - No valid RSS content returned[0m
+[31m  21. Nature (science) - No valid RSS content returned[0m
+[31m  22. Scientific American (science) - No valid RSS content returned[0m
+[31m  23. Google News - Health (health) - No valid RSS content returned[0m
+[31m  24. WebMD (health) - Request timeout[0m
+[31m  25. Medical News Today (health) - No valid RSS content returned[0m
+[31m  26. Healthline (health) - No valid RSS content returned[0m
+[31m  27. Mayo Clinic (health) - No valid RSS content returned[0m
+[31m  28. Google News - Sports (sports) - No valid RSS content returned[0m
+[31m  29. Sports Illustrated (sports) - No valid RSS content returned[0m
+[31m  30. Baidu Sports - 体育 (sports) - No valid RSS content returned[0m
+[31m  31. Google News - Entertainment (entertainment) - No valid RSS content returned[0m
+[31m  32. People (entertainment) - No valid RSS content returned[0m
+[31m  33. Google News - Politics (politics) - No valid RSS content returned[0m
+[31m  34. Politico (politics) - No valid RSS content returned[0m
+[31m  35. Reuters Politics (politics) - No valid RSS content returned[0m
+[31m  36. Reuters Environment (environment) - No valid RSS content returned[0m
+[31m  37. Bilibili - 热门视频 (RSSHub) (entertainment) - No valid RSS content returned[0m
+[31m  38. Bilibili - 科技区 (RSSHub) (tech) - No valid RSS content returned[0m
+[31m  39. Bilibili - 游戏区 (RSSHub) (entertainment) - No valid RSS content returned[0m
+[31m  40. Weibo - 热搜榜 (RSSHub) (social) - No valid RSS content returned[0m
+[31m  41. 中新网 - 国内新闻 (general) - No valid RSS content returned[0m
+[31m  42. 中新网 - 国际新闻 (general) - No valid RSS content returned[0m
+[31m  43. 新京报 (general) - No valid RSS content returned[0m
+[31m  44. 知乎 - 每日精选 (social) - No valid RSS content returned[0m
+[31m  45. cnBeta (tech) - Error: fetch failed[0m
+[31m  46. 好奇心日报 (general) - Error: fetch failed[0m
+[31m  47. 澎湃新闻 (general) - No valid RSS content returned[0m
+[31m  48. 界面新闻 (business) - No valid RSS content returned[0m
+[31m  49. 观察者网 (politics) - No valid RSS content returned[0m
+[31m  50. 财新网 (business) - No valid RSS content returned[0m
+[31m  51. 第一财经 (business) - No valid RSS content returned[0m
+[31m  52. DoNews (tech) - No valid RSS content returned[0m
+[31m  53. 雷锋网 (tech) - No valid RSS content returned[0m
+[31m  54. 快科技 (tech) - No valid RSS content returned[0m
+[31m  55. 游戏葡萄 (entertainment) - No valid RSS content returned[0m
+[31m  56. 阮一峰的网络日志 (tech) - No valid RSS content returned[0m
+[0m[0m
+[34m📊 Verified Sources by Category:[0m
+[36m  tech           : 18 sources[0m
+[36m  business       : 13 sources[0m
+[36m  general        : 9 sources[0m
+[36m  crypto         : 7 sources[0m
+[36m  entertainment  : 7 sources[0m
+[36m  politics       : 5 sources[0m
+[36m  environment    : 5 sources[0m
+[36m  science        : 4 sources[0m
+[36m  sports         : 4 sources[0m
+[36m  health         : 2 sources[0m
+[32m
+✅ Verification complete!
+[0m
+[34m💡 Use VERIFIED_SOURCES.json for GitHub Secrets (NEWS_SOURCES_JSON)[0m

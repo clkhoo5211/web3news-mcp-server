@@ -1,0 +1,450 @@
+[
+  {
+    "name": "Baidu News - 热点",
+    "url": "https://news.baidu.com/rss/",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Reuters - World News",
+    "url": "http://feeds.reuters.com/Reuters/worldNews",
+    "category": "general",
+    "language": "en",
+    "verified": true,
+    "error": "Error: fetch failed"
+  },
+  {
+    "name": "Associated Press",
+    "url": "https://apnews.com/apf-topnews",
+    "category": "general",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "MSN News",
+    "url": "https://www.msn.com/en-us/news/rss",
+    "category": "general",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "UN News",
+    "url": "https://news.un.org/en/rss/feed/all",
+    "category": "general",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Technology",
+    "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "category": "tech",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "The Verge",
+    "url": "https://www.theverge.com/rss/index.xml",
+    "category": "tech",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Medium",
+    "url": "https://medium.com/feed",
+    "category": "tech",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Baidu Tech - 科技",
+    "url": "https://news.baidu.com/rss/tech",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Forbes",
+    "url": "https://www.forbes.com/real-time/feed2/",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "The Wall Street Journal",
+    "url": "http://online.wsj.com/xml/rss/3_7085.xml",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Business Insider",
+    "url": "https://www.businessinsider.com/rss",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Morningstar",
+    "url": "https://www.morningstar.com/rss/news",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Barron's",
+    "url": "https://www.barrons.com/feed/all",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "MarketBeat",
+    "url": "https://www.marketbeat.com/rss/",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Market Screener",
+    "url": "https://www.marketscreener.com/rss/",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Briefing.com",
+    "url": "https://www.briefing.com/rss/",
+    "category": "business",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Baidu Finance - 财经",
+    "url": "https://news.baidu.com/rss/finance",
+    "category": "business",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "CoinMarketCap",
+    "url": "https://coinmarketcap.com/headlines/news/",
+    "category": "crypto",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Science",
+    "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "category": "science",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Nature",
+    "url": "https://www.nature.com/subjects/rss.xml",
+    "category": "science",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Scientific American",
+    "url": "https://www.scientificamerican.com/feed/",
+    "category": "science",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Health",
+    "url": "https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNR3QwTlRGU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US:en",
+    "category": "health",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "WebMD",
+    "url": "https://rssfeeds.webmd.com/rss/rss.aspx?RSSSource=RSS_PUBLIC",
+    "category": "health",
+    "language": "en",
+    "verified": true,
+    "error": "Request timeout"
+  },
+  {
+    "name": "Medical News Today",
+    "url": "https://www.medicalnewstoday.com/rss",
+    "category": "health",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Healthline",
+    "url": "https://www.healthline.com/rss",
+    "category": "health",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Mayo Clinic",
+    "url": "https://newsnetwork.mayoclinic.org/feed/",
+    "category": "health",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Sports",
+    "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "category": "sports",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Sports Illustrated",
+    "url": "https://www.si.com/rss/si_topstories.rss",
+    "category": "sports",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Baidu Sports - 体育",
+    "url": "https://news.baidu.com/rss/sports",
+    "category": "sports",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Entertainment",
+    "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "category": "entertainment",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "People",
+    "url": "https://people.com/feed/",
+    "category": "entertainment",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Google News - Politics",
+    "url": "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp6TVdZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "category": "politics",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Politico",
+    "url": "http://www.politico.com/rss/politicopicks.xml",
+    "category": "politics",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Reuters Politics",
+    "url": "https://www.reuters.com/politics/rss",
+    "category": "politics",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Reuters Environment",
+    "url": "https://www.reuters.com/environment/rss",
+    "category": "environment",
+    "language": "en",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Bilibili - 热门视频 (RSSHub)",
+    "url": "https://rsshub.app/bilibili/popular/all",
+    "category": "entertainment",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Bilibili - 科技区 (RSSHub)",
+    "url": "https://rsshub.app/bilibili/partion/36",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Bilibili - 游戏区 (RSSHub)",
+    "url": "https://rsshub.app/bilibili/partion/4",
+    "category": "entertainment",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "Weibo - 热搜榜 (RSSHub)",
+    "url": "https://rsshub.app/weibo/search/hot",
+    "category": "social",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "中新网 - 国内新闻",
+    "url": "http://www.chinanews.com/rss/gn.xml",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "中新网 - 国际新闻",
+    "url": "http://www.chinanews.com/rss/gj.xml",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "新京报",
+    "url": "http://www.bjnews.com.cn/feed",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "知乎 - 每日精选",
+    "url": "https://www.zhihu.com/rss",
+    "category": "social",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "cnBeta",
+    "url": "http://www.cnbeta.com/backend.php",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "Error: fetch failed"
+  },
+  {
+    "name": "好奇心日报",
+    "url": "http://www.qdaily.com/feed.xml",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "Error: fetch failed"
+  },
+  {
+    "name": "澎湃新闻",
+    "url": "https://www.thepaper.cn/rss",
+    "category": "general",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "界面新闻",
+    "url": "https://www.jiemian.com/rss",
+    "category": "business",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "观察者网",
+    "url": "https://www.guancha.cn/rss",
+    "category": "politics",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "财新网",
+    "url": "https://www.caixin.com/rss",
+    "category": "business",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "第一财经",
+    "url": "https://www.yicai.com/rss",
+    "category": "business",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "DoNews",
+    "url": "https://www.donews.com/rss",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "雷锋网",
+    "url": "https://www.leiphone.com/rss",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "快科技",
+    "url": "https://www.mydrivers.com/rss",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "游戏葡萄",
+    "url": "http://youxiputao.com/feed",
+    "category": "entertainment",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  },
+  {
+    "name": "阮一峰的网络日志",
+    "url": "http://www.ruanyifeng.com/blog/atom.xml",
+    "category": "tech",
+    "language": "zh",
+    "verified": true,
+    "error": "No valid RSS content returned"
+  }
+]
