@@ -108,7 +108,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     res.status(200).json({
       status: 'MCP Server Running',
-      tools: ['get_rss_feed'],
+      tools: ['get_rss_feed', 'get_article_content'],
       message: 'Use MCP client to connect via SSE transport',
       protocolVersion: '2024-11-05',
     });
@@ -213,6 +213,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                   },
                 },
                 required: ['source_name'],
+              },
+            },
+            {
+              name: 'get_article_content',
+              description: 'Fetch and parse full article content from a URL (server-side, no CORS issues)',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  article_url: {
+                    type: 'string',
+                    description: 'The URL of the article to fetch and parse',
+                  },
+                },
+                required: ['article_url'],
               },
             },
           ],
@@ -587,6 +601,124 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             error: {
               code: -32603,
               message: `Error: ${error.message || 'Unknown error'}`,
+            },
+          });
+          return;
+        }
+      }
+
+      // Get article content by URL
+      if (name === 'get_article_content') {
+        try {
+          const articleUrl = args?.article_url;
+          
+          if (!articleUrl) {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: 'article_url is required',
+              },
+            });
+            return;
+          }
+
+          // Validate URL
+          try {
+            new URL(articleUrl);
+          } catch {
+            res.status(200).json({
+              jsonrpc: '2.0',
+              id: body.id,
+              error: {
+                code: -32602,
+                message: 'Invalid URL format',
+              },
+            });
+            return;
+          }
+
+          // Fetch article HTML (server-side, no CORS issues)
+          const response = await fetch(articleUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (compatible; Web3News-MCP/1.0)',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            },
+            signal: AbortSignal.timeout(20000), // 20 second timeout
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const html = await response.text();
+
+          // Parse HTML to extract article content
+          const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
+          const title = titleMatch?.[1]?.replace(/<!\[CDATA\[(.*?)\]\]>/gi, '$1').trim() || 'Untitled';
+
+          const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i) ||
+                           html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+          const excerpt = descMatch?.[1] || '';
+
+          const authorMatch = html.match(/<meta[^>]*name=["']author["'][^>]*content=["']([^"']+)["']/i) ||
+                             html.match(/<meta[^>]*property=["']article:author["'][^>]*content=["']([^"']+)["']/i);
+          const byline = authorMatch?.[1] || '';
+
+          // Extract article content
+          const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i) ||
+                             html.match(/<main[^>]*>([\s\S]*?)<\/main>/i) ||
+                             html.match(/<div[^>]*class=["'][^"']*article[^"']*["'][^>]*>([\s\S]*?)<\/div>/i) ||
+                             html.match(/<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/i);
+
+          let content = articleMatch?.[1] || html;
+
+          // Clean content
+          content = content
+            .replace(/<script[\s\S]*?<\/script>/gi, '')
+            .replace(/<style[\s\S]*?<\/style>/gi, '')
+            .replace(/<nav[\s\S]*?<\/nav>/gi, '')
+            .replace(/<header[\s\S]*?<\/header>/gi, '')
+            .replace(/<footer[\s\S]*?<\/footer>/gi, '')
+            .replace(/<aside[\s\S]*?<\/aside>/gi, '');
+
+          const textContent = content.replace(/<[^>]*>/g, '').trim();
+          const length = textContent.length;
+          const siteName = new URL(articleUrl).hostname.replace('www.', '');
+
+          // Return as JSON string (MCP format)
+          const result = JSON.stringify({
+            success: true,
+            title,
+            content,
+            textContent,
+            excerpt,
+            byline,
+            length,
+            siteName,
+          });
+
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            result: {
+              content: [
+                {
+                  type: 'text',
+                  text: result,
+                },
+              ],
+            },
+          });
+          return;
+        } catch (error: any) {
+          res.status(200).json({
+            jsonrpc: '2.0',
+            id: body.id,
+            error: {
+              code: -32603,
+              message: `Error fetching article: ${error.message || 'Unknown error'}`,
             },
           });
           return;
